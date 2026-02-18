@@ -99,7 +99,7 @@ export default function LoginPage() {
 
             <Button
               type="submit"
-              className="w-full h-11 bg-[hsl(var(--brand))] hover:bg-[hsl(199,89%,42%)] text-white font-semibold shadow-lg shadow-[hsl(var(--brand))]/20 transition-all duration-200"
+              className="w-full h-11 bg-[hsl(var(--brand))] hover:bg-[hsl(199,89%,42%)] text-black hover:text-white font-semibold shadow-lg shadow-[hsl(var(--brand))]/20 transition-all duration-200"
               disabled={isLoading}
             >
               {isLoading ? (

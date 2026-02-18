@@ -16,6 +16,7 @@ const User = require('../models/User');
 const Assessment = require('../models/Assessment');
 const LearningPlan = require('../models/LearningPlan');
 const ChatHistory = require('../models/ChatHistory');
+const Skill = require('../models/Skill');
 const connectDB = require('../config/db');
 
 // ─── Realistic data pools ────────────────────────────────────────────────────
@@ -530,11 +531,44 @@ async function seed() {
     }
   }
 
-  // ── Summary ──
+  // ── Seed Skills Collection ──
   const uniqueSkills = new Set();
   assessmentDocs.forEach(a => a.scores.forEach(s => uniqueSkills.add(s.skill)));
+  
+  // Category mapping for skills
+  const skillCategories = {
+    'frontend': ['JavaScript', 'React', 'TypeScript', 'Next.js', 'CSS', 'HTML', 'Tailwind CSS', 'Redux', 'Webpack', 'Responsive Design', 'Web Performance', 'Accessibility', 'Micro-Frontends'],
+    'backend': ['Node.js', 'Express.js', 'PostgreSQL', 'MongoDB', 'REST APIs', 'GraphQL', 'Python', 'SQL', 'Redis', 'Microservices', 'gRPC', 'Kafka', 'RabbitMQ'],
+    'devops': ['Docker', 'Kubernetes', 'CI/CD', 'Jenkins', 'GitHub Actions', 'Ansible', 'Terraform', 'Helm', 'Istio', 'Prometheus', 'Grafana', 'Monitoring', 'ELK Stack', 'Chaos Engineering'],
+    'cloud': ['AWS', 'Azure', 'GCP', 'Serverless', 'Cloud Security', 'Cost Optimization', 'Infrastructure as Code', 'AWS SageMaker'],
+    'data': ['SQL', 'Pandas', 'Data Visualization', 'Statistics', 'Tableau', 'Power BI', 'Excel', 'ETL Pipelines', 'Data Modeling', 'Business Intelligence', 'R', 'Jupyter Notebooks', 'A/B Testing', 'Spark', 'Data Processing'],
+    'ml': ['Machine Learning', 'Deep Learning', 'TensorFlow', 'PyTorch', 'Scikit-learn', 'NLP', 'Computer Vision', 'MLOps', 'Feature Engineering', 'Reinforcement Learning', 'Research', 'Model Serving', 'Mathematics'],
+    'security': ['Security', 'Penetration Testing', 'OWASP', 'Cloud Security', 'SIEM', 'Cryptography', 'Incident Response', 'Compliance', 'Vulnerability Assessment', 'Threat Modeling'],
+    'mobile': ['React Native', 'iOS', 'Android', 'Swift', 'Kotlin', 'Firebase', 'App Store Deployment'],
+    'design': ['Figma', 'UI Design', 'UX Research', 'Design Systems', 'Prototyping', 'Accessibility', 'User Testing', 'Adobe XD', 'Sketch', 'Motion Design', 'Brand Design'],
+    'testing': ['Testing', 'Selenium', 'Cypress', 'Jest', 'Postman', 'Performance Testing', 'Security Testing', 'K6 Load Testing', 'Test Planning'],
+    'leadership': ['Leadership', 'Communication', 'People Management', 'Project Management', 'Stakeholder Management', 'Mentoring', 'Agile', 'OKRs'],
+    'database': ['PostgreSQL', 'MongoDB', 'Redis', 'SQL', 'Data Modeling', 'MySQL', 'Elasticsearch']
+  };
+  
+  const getCategory = (skill) => {
+    for (const [cat, skills] of Object.entries(skillCategories)) {
+      if (skills.includes(skill)) return cat;
+    }
+    return 'other';
+  };
+  
+  const skillDocs = [...uniqueSkills].map(name => ({
+    name,
+    category: getCategory(name)
+  }));
+  
+  console.log(`📥 Seeding ${skillDocs.length} skills...`);
+  await Skill.deleteMany({});
+  await Skill.insertMany(skillDocs);
+  console.log(`  ✓ Seeded ${skillDocs.length} skills`);
 
-  console.log('\n' + '═'.repeat(60));
+  // ── Summary ──
   console.log('✅  SEED COMPLETE');
   console.log('═'.repeat(60));
   console.log(`  👤  Admin:          1 (admin@skillmap.io / password123)`);

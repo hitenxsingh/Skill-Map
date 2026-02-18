@@ -147,7 +147,7 @@ export default function RegisterPage() {
                 >
                   <Shield className={cn("w-5 h-5 shrink-0", role === 'admin' ? "text-[hsl(var(--brand))]" : "text-muted-foreground")} />
                   <div>
-                    <p className={cn("text-sm font-semibold", role === 'admin' ? "text-[hsl(var(--brand))]" : "text-muted-foreground")}>Org Head</p>
+                    <p className={cn("text-sm font-semibold", role === 'admin' ? "text-blue-500" : "text-muted-foreground")}>Org Head</p>
                     <p className="text-[11px] text-muted-foreground">Administrator</p>
                   </div>
                 </button>
@@ -156,7 +156,7 @@ export default function RegisterPage() {
 
             <Button
               type="submit"
-              className="w-full h-11 bg-[hsl(var(--brand))] hover:bg-[hsl(199,89%,42%)] text-white font-semibold shadow-lg shadow-[hsl(var(--brand))]/20 transition-all duration-200"
+              className="w-full h-11 bg-[hsl(var(--brand))] hover:bg-[hsl(199,89%,42%)] text-black hover:text-white font-semibold shadow-lg shadow-[hsl(var(--brand))]/20 transition-all duration-200"
               disabled={isLoading}
             >
               {isLoading ? (

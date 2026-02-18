@@ -24,6 +24,7 @@ import {
   LogOut,
   ChevronLeft,
   ChevronRight,
+  AlertTriangle,
 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -46,6 +47,7 @@ const adminNav = [
   { label: 'Add Achievement', href: '/assessments/add', icon: PlusCircle },
   { section: 'Organization' },
   { label: 'Command Center', href: '/admin/skills', icon: Users },
+  { label: 'Training & Gaps', href: '/admin/gaps', icon: AlertTriangle },
   { label: 'Matchmaker', href: '/admin/matchmaker', icon: Search },
   { label: 'AI Agent', href: '/admin/agent', icon: BotMessageSquare },
 ];

@@ -7,10 +7,10 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
-import { Plus, X, Loader2, CheckCircle2, Award, FileText, Sparkles, AlertCircle, Calendar as CalendarIcon, Link as LinkIcon } from 'lucide-react';
+import { Loader2, CheckCircle2, Award, FileText, Sparkles, AlertCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import SkillSelect from '@/components/SkillSelect';
 
 const TYPES = [
   { id: 'certificate', label: 'Certification', icon: Award, desc: 'Professional certs' },
@@ -27,17 +27,9 @@ export default function AddAssessmentPage() {
   const [url, setUrl] = useState('');
   const [description, setDescription] = useState('');
   const [skills, setSkills] = useState([]);
-  const [skillInput, setSkillInput] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
-
-  const addSkill = () => {
-    if (skillInput.trim() && !skills.includes(skillInput.trim())) {
-      setSkills(prev => [...prev, skillInput.trim()]);
-      setSkillInput('');
-    }
-  };
 
   const handleSubmit = async () => {
     if (!title || !provider || !date) { setError('Fill in all required fields.'); return; }
@@ -45,7 +37,7 @@ export default function AddAssessmentPage() {
     setError('');
     try {
       await api.post('/assessments', {
-        source: 'manual_achievement',
+        source: 'manual',
         category: type,
         scores: skills.map(s => ({ skill: s, score: 100, maxScore: 100 })),
         metadata: { title, provider, completionDate: date, certificateUrl: url, description, type }
@@ -135,17 +127,14 @@ export default function AddAssessmentPage() {
 
             <div className="space-y-1.5">
               <Label className="text-xs">Skills</Label>
-              <div className="flex gap-2">
-                <Input placeholder="Add skill tag..." value={skillInput} onChange={e => setSkillInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), addSkill())} className="max-w-xs" />
-                <Button onClick={addSkill} variant="secondary" size="sm">Add</Button>
-              </div>
-              <div className="flex flex-wrap gap-1.5 mt-1">
-                {skills.map((s, i) => (
-                  <Badge key={i} variant="outline" className="gap-1 pr-1 text-xs">
-                    {s}<button onClick={() => setSkills(prev => prev.filter(x => x !== s))} className="hover:text-destructive"><X className="w-3 h-3" /></button>
-                  </Badge>
-                ))}
-              </div>
+              <SkillSelect 
+                selected={skills} 
+                onChange={setSkills}
+                placeholder="Search and select skills..."
+                maxSelected={10}
+                showCategories={true}
+              />
+              <p className="text-[11px] text-muted-foreground">Select existing skills or type to add new ones</p>
             </div>
 
             <div className="space-y-1.5">
